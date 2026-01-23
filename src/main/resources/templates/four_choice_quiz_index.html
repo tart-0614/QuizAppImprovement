@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>4択クイズ：管理画面</title>
+    <style>
+        .container { width: 80%; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .msg { color: blue; font-weight: bold; }
+        .csv-section { 
+            background-color: #f9f9f9; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px dashed #28a745; 
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>4択クイズ：一覧</h1>
+        
+        <p th:if="${complete}" class="msg" th:text="${complete}"></p>
+
+        <fieldset>
+            <legend>新規登録（手動）</legend>
+            <form th:action="@{/fourChoiceQuiz/insert}" method="post" th:object="${fourChoiceQuizForm}">
+                <div>
+                    問題文：<br>
+                    <textarea th:field="*{question}" cols="30" rows="3"></textarea>
+                </div>
+                <div>
+                    選択肢1：<input type="text" th:field="*{choice1}">
+                    選択肢2：<input type="text" th:field="*{choice2}">
+                </div>
+                <div>
+                    選択肢3：<input type="text" th:field="*{choice3}">
+                    選択肢4：<input type="text" th:field="*{choice4}">
+                </div>
+                <div>
+                    正解番号：
+                    <select th:field="*{answerNumber}">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <button type="submit">登録</button>
+            </form>
+        </fieldset>
+
+        <div class="csv-section">
+            <h3>CSVから一括登録</h3>
+            <p style="font-size: 0.85em; color: #555;">
+                フォーマット：問題文,選択肢1,選択肢2,選択肢3,選択肢4,正解番号(1-4)<br>
+                例：日本の首都は？,大阪,東京,福岡,札幌,2
+            </p>
+            <form th:action="@{/fourChoiceQuiz/upload}" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv" required>
+                <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 7px 15px; border-radius: 4px; cursor: pointer;">
+                    CSVアップロードして登録
+                </button>
+            </form>
+        </div>
+
+        <h3>登録済み問題一覧</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>問題</th>
+                    <th>選択肢</th>
+                    <th>正解</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="obj : ${list}">
+                    <td th:text="${obj.id}"></td>
+                    <td th:text="${obj.question}"></td>
+                    <td>
+                        1:[[${obj.choice1}]] 2:[[${obj.choice2}]]<br>
+                        3:[[${obj.choice3}]] 4:[[${obj.choice4}]]
+                    </td>
+                    <td th:text="${obj.answerNumber}"></td>
+                    <td>
+                        <a th:href="@{/fourChoiceQuiz/edit/{id}(id=${obj.id})}">編集</a>
+                        <form th:action="@{/fourChoiceQuiz/delete}" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${obj.id}">
+                            <button type="submit">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><a th:href="@{/play/setup}">クイズをプレイする（10問連続）</a></p>
+    </div>
+</body>
+</html>

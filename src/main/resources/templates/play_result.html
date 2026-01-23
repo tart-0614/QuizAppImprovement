@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>結果発表</title></head>
+<body>
+    <h1>結果発表！</h1>
+    <p>10問中、 <strong th:text="${playForm.score}"></strong> 問正解でした！</p>
+    <a th:href="@{/fourChoiceQuiz}">管理画面に戻る</a>
+</body>
+</html>

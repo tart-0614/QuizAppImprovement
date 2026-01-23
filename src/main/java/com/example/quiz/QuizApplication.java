@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class QuizApplication {
 
     public static void main(String[] args) {
-        // Webアプリケーションとして起動（テスト用executeは削除）
+        // Webアプリケーションとして起動
         SpringApplication.run(QuizApplication.class, args);
     }
 }

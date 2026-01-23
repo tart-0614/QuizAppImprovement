@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>4択クイズ</title></head>
+<body>
+    <h2>第 [[${playForm.currentIdx + 1}]] 問（4択）</h2>
+    <p th:text="${quiz.question}"></p>
+    <form th:action="@{/play/answer}" method="post">
+        <button type="submit" name="answer" value="1" th:text="'1. ' + ${quiz.choice1}"></button><br>
+        <button type="submit" name="answer" value="2" th:text="'2. ' + ${quiz.choice2}"></button><br>
+        <button type="submit" name="answer" value="3" th:text="'3. ' + ${quiz.choice3}"></button><br>
+        <button type="submit" name="answer" value="4" th:text="'4. ' + ${quiz.choice4}"></button>
+    </form>
+</body>
+</html>
