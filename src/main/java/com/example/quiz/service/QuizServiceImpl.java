@@ -64,25 +64,31 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public void deleteFourChoiceById(Integer id) { fourChoiceRepository.deleteById(id); }
 
-    // --- 10問プレイ用のロジック ---
+    // --- 10問プレイ用のロジック (修正：セミコロンを削除) ---
     @Override
-    public List<Object> selectTenRandomQuizzes() {
-        List<Object> allQuizzes = new ArrayList<>();
-        repository.findAll().forEach(allQuizzes::add);
-        fourChoiceRepository.findAll().forEach(allQuizzes::add);
-        Collections.shuffle(allQuizzes);
-        int limit = Math.min(allQuizzes.size(), 10);
-        return allQuizzes.subList(0, limit);
+    public List<Object> selectTenRandomQuizzes(String type) {
+        List<Object> quizList = new ArrayList<>();
+
+        if ("twoChoice".equals(type)) {
+            // 2択問題のみ取得
+            repository.findAll().forEach(quizList::add);
+        } else if ("fourChoice".equals(type)) {
+            // 4択問題のみ取得
+            fourChoiceRepository.findAll().forEach(quizList::add);
+        }
+
+        Collections.shuffle(quizList);
+        int limit = Math.min(quizList.size(), 10);
+        return quizList.subList(0, limit);
     }
 
-    // --- CSV一括登録の実装 (今回追加) ---
+    // --- CSV一括登録の実装 ---
     @Override
     public void insertByCsv(MultipartFile file) {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // 空行をスキップ
                 if (line.trim().isEmpty()) continue;
 
                 String[] data = line.split(",");
@@ -93,7 +99,6 @@ public class QuizServiceImpl implements QuizService {
                     quiz.setChoice2(data[2]);
                     quiz.setChoice3(data[3]);
                     quiz.setChoice4(data[4]);
-                    // 数値変換。空白を考慮してtrim()を使用
                     quiz.setAnswerNumber(Integer.parseInt(data[5].trim()));
                     
                     fourChoiceRepository.save(quiz);

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>クイズトップ</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; line-height: 1.6; background-color: #f8f9fa; }
+        .container { max-width: 800px; margin: auto; }
+        .menu-card { 
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 12px 24px; 
+            background-color: #007bff; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-weight: bold;
+        }
+        .btn-green { background-color: #28a745; }
+        .admin-links { margin-top: 30px; padding: 20px; background-color: #e9ecef; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>クイズアプリ：メニュー</h1>
+        <p>プレイしたいクイズの形式を選択してください（10問連続）。</p>
+        <hr>
+
+        <div class="menu-card">
+            <h3>2択クイズ</h3>
+            <p>○か×かの直感で答えるクイズです。</p>
+            <a th:href="@{/play/setup(type='twoChoice')}" class="btn">2択クイズを開始</a>
+        </div>
+
+        <div class="menu-card">
+            <h3>4択クイズ</h3>
+            <p>4つの選択肢からじっくり選ぶクイズです。</p>
+            <a th:href="@{/play/setup(type='fourChoice')}" class="btn btn-green">4択クイズを開始</a>
+        </div>
+
+        <div class="admin-links">
+            <h4>管理メニュー</h4>
+            <ul>
+                <li><a th:href="@{/quiz}">2択クイズの管理（登録・一覧）</a></li>
+                <li><a th:href="@{/fourChoiceQuiz}">4択クイズの管理（CSV登録・一覧）</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

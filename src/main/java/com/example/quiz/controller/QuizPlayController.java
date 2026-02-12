@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.example.quiz.entity.FourChoiceQuiz;
@@ -21,11 +22,15 @@ public class QuizPlayController {
     @Autowired
     QuizService service;
 
-    /** プレイ開始：10問セットして最初の問題へ */
+    /** * プレイ開始：タイプ（2択or4択）を判定して10問セットし、最初の問題へ 
+     * @param type "twoChoice" または "fourChoice"
+     */
     @GetMapping("/setup")
-    public String setup(Model model) {
+    public String setup(@RequestParam("type") String type, Model model) {
         PlayForm playForm = new PlayForm();
-        playForm.setQuizzes(service.selectTenRandomQuizzes());
+        
+        // 修正ポイント：受け取ったタイプをサービスに渡し、対象のクイズのみを10問取得
+        playForm.setQuizzes(service.selectTenRandomQuizzes(type));
         playForm.setCurrentIdx(0);
         playForm.setScore(0);
         
@@ -36,8 +41,13 @@ public class QuizPlayController {
     /** 問題表示 */
     @GetMapping("/show")
     public String show(PlayForm playForm, Model model) {
+        // セッションから現在の問題を取得
         Object quiz = playForm.getQuizzes().get(playForm.getCurrentIdx());
         model.addAttribute("quiz", quiz);
+        
+        // 進捗表示用（例：第 1 問 / 10 問中）
+        model.addAttribute("currentCount", playForm.getCurrentIdx() + 1);
+        model.addAttribute("totalCount", playForm.getQuizzes().size());
         
         // クラスの種類によって表示するHTMLを切り分ける
         if (quiz instanceof Quiz) {
@@ -47,7 +57,7 @@ public class QuizPlayController {
         }
     }
     
-    /** 回答を判定し、次の問題へ進むか結果画面へ行くかを制御します */
+    /** 回答を判定し、次の問題へ進むか結果画面へ行くかを制御 */
     @PostMapping("/answer")
     public String answer(Integer answer, PlayForm playForm, Model model) {
         // 現在の問題を取得

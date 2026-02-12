@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>結果発表</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>クイズ結果</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; text-align: center; background-color: #f8f9fa; }
+        .result-container { background: white; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .score { font-size: 48px; color: #007bff; font-weight: bold; }
+        .btn { display: inline-block; margin: 10px; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-main { background-color: #007bff; color: white; }
+        .btn-retry { background-color: #6c757d; color: white; }
+        .btn-home { background-color: #28a745; color: white; }
+        .btn:hover { opacity: 0.8; }
+    </style>
+</head>
 <body>
-    <h1>結果発表！</h1>
-    <p>10問中、 <strong th:text="${playForm.score}"></strong> 問正解でした！</p>
-    <a th:href="@{/fourChoiceQuiz}">管理画面に戻る</a>
+    <div class="result-container">
+        <h1>クイズ終了！</h1>
+        <p>あなたの正解数は...</p>
+        <div class="score">
+            <span th:text="${playForm.score}">0</span> / <span th:text="${playForm.quizzes.size()}">10</span>
+        </div>
+        <p>お疲れ様でした！</p>
+        <hr>
+
+        <div>
+            <p>もう一度挑戦する：</p>
+            <a th:href="@{/play/setup(type='twoChoice')}" class="btn btn-retry">2択をリトライ</a>
+            <a th:href="@{/play/setup(type='fourChoice')}" class="btn btn-retry">4択をリトライ</a>
+        </div>
+
+        <hr>
+        <a th:href="@{/}" class="btn btn-home">トップメニューへ戻る</a>
+    </div>
 </body>
 </html>
